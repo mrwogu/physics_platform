@@ -21,8 +21,10 @@
  * SOFTWARE.
  */
 
-function ex01(props) {
-    var planck = require('planck/dist/planck')
+import * as planck from 'planck-js';
+
+function Model02(props) {
+    //var planck = require('planck/dist/planck')
 
     var Vec2 = planck.Vec2;
 
@@ -97,4 +99,4 @@ function ex01(props) {
     console.log(Math.abs(angle) < 0.01);
 }
 
-export default ex01;
+export default Model02;
