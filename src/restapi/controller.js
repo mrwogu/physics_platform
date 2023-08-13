@@ -57,10 +57,25 @@ const deleteUserById = (req, res) => {
     })
 };
 
+const updateUserById = (res, req) => {
+    const id = parseInt(req.params.id);
+    const { name } = req.body;
+    pool.query(queries.getUserById, [id], (error, results) => {
+    const noUserFound = !results.rows.length;
+    if(noUserFound) {
+        res.send("User doesn't exist.");
+    }
+    pool.query(queries.updateUserById, [name, id], (error, results) => {
+        if (error) throw error;
+        response.status(200).send("Update successful.");
+    })
+    })
+}
+
 /* CRUDs for MODELS table */
 
 const addModel = (req, res) => {
-    const {model_name, creator, creation_date, status, model_code} = req.body;
+    const {model_name, model_code} = req.body;
     pool.query(queries.addUser, [model_name, creator, creation_date, status, model_code], (error, results) => {
         if (error) throw error;
         res.status(201).send("Model added successfully.");
@@ -74,5 +89,6 @@ module.exports = {
     getUserById,
     addUser,
     deleteUserById,
-    addModel
+    addModel,
+    updateUserById
 };

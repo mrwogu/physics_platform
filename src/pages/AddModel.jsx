@@ -1,28 +1,34 @@
-import React, {useId} from 'react';
+import React, {useId, useState} from 'react';
 import "../styles/AddModel.css";
 
-function AddModel() {
+function AddModel(setErrorMessage) {
 
-    function handleSubmit(e) {
-        // Prevent the browser from reloading the page
+    const [modelName, setModelName] = useState("");
+    const [creator, setCreator] = useState("");
+    const [creationDate, setCreationDate] = useState("");
+    const [status, setStatus] = useState("");
+    const [modelCode, setModelCode] = useState("");
+
+    const handleCreateModel= async (e) => {
         e.preventDefault();
-
-        // Read the form data
-        const form = e.target;
-        const formData = new FormData(form);
-
-        // You can pass formData as a fetch body directly:
-        fetch('/some-api', { method: form.method, body: formData });
-
-        // Or you can work with it as a plain object:
-        const formJson = Object.fromEntries(formData.entries());
-        console.log(formJson);
-    }
+        setStatus("A");
+        setCreationDate(Date());
+        setCreator("Test");
+        const requestOptions = {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({model_name: modelName, creator: creator, creation_date: creationDate, status: status, model_code: modelCode})
+        };
+        const response = await fetch("http://localhost:8000/models", requestOptions);
+        if(!response) {
+            setErrorMessage("Model cannot be created")
+        }
+    };
 
     const newModelAreaId = useId();
     return (
         <div className='addmodel'>
-            <form method="post" onSubmit={handleSubmit}>
+            <form method="post" onSubmit={handleCreateModel}>
                 <h1>Add a new model here</h1>
                 <div className="item">
                 <label>
@@ -30,7 +36,14 @@ function AddModel() {
                 </label>
                 </div>
                 <div className="item">
-                    <input name="modelName" defaultValue="Simple collision" />
+                    <input
+                        type="text"
+                        name="modelName"
+                        defaultValue="Simple collision"
+                        value={modelName}
+                        onChange={(e)=>setModelName(e.target.value)}
+                        required
+                    />
                 </div>
                 <div className="item">
                     <label htmlFor={newModelAreaId}>
@@ -38,10 +51,17 @@ function AddModel() {
                     </label>
                 </div>
                 <div className="item">
-                    <textarea id={newModelAreaId} name="newModel" rows={4} cols={40}/>
+                    <textarea
+                        id={newModelAreaId}
+                        name="newModel"
+                        value={modelCode}
+                        onChange={(e)=>setModelCode(e.target.value)}
+                        required
+                        rows={4}
+                        cols={40}/>
                 </div>
                 <button class="button-3" type='reset'>Reset edits</button>
-                <button class="button-3" type='submit'>Save post</button>
+                <button class="button-3" type='submit' onClick={handleCreateModel}>Save post</button>
             </form>
         </div>
     );
