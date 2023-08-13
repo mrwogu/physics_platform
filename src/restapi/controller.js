@@ -1,7 +1,8 @@
 const pool = require('../../db');
 const queries = require('./queries');
 
-//CRUD for USERS table
+/* CRUDs for USERS table */
+
 const getUsers = (req, res) => {
     pool.query(queries.getUsers, (error, results) => {
         if(error) throw error;
@@ -42,8 +43,36 @@ const addUser = (req, res) => {
     });
 };
 
+const deleteUserById = (req, res) => {
+    const id = parseInt(req.params.id);
+    pool.query(queries.getUserById, [id], (error, results) => {
+        const noUserFound = !results.rows.length;
+        if(noUserFound) {
+            res.send("User doesn't exist.");
+        }
+        pool.query(queries.deleteUserById, [id], (error, results) => {
+            if(error) throw error;
+            res.status(200).send("User deleted successfully.");
+        })
+    })
+};
+
+/* CRUDs for MODELS table */
+
+const addModel = (req, res) => {
+    const {model_name, creator, creation_date, status, model_code} = req.body;
+    pool.query(queries.addUser, [model_name, creator, creation_date, status, model_code], (error, results) => {
+        if (error) throw error;
+        res.status(201).send("Model added successfully.");
+        console.log("Model added successfully.");
+    });
+};
+
+
 module.exports = {
     getUsers,
     getUserById,
     addUser,
+    deleteUserById,
+    addModel
 };
