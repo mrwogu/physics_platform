@@ -1,5 +1,6 @@
 const pool = require('../../db');
 const queries = require('./queries');
+const path = require("path");
 
 /* CRUDs for USERS table */
 
@@ -74,15 +75,58 @@ const updateUserById = (res, req) => {
 
 /* CRUDs for MODELS table */
 
-const addModel = (req, res) => {
-    const {model_name, model_code} = req.body;
-    pool.query(queries.addUser, [model_name, creator, creation_date, status, model_code], (error, results) => {
-        if (error) throw error;
-        res.status(201).send("Model added successfully.");
-        console.log("Model added successfully.");
-    });
+const getModels = (req, res) => {
+    pool.query(queries.getModels, (error, results) => {
+        if(error) throw error;
+        res.status(200).json(results.rows);
+    })
 };
 
+//this method is responsible for uploading the icon and js file to the server
+const uploadModel = (req, res, next) => {
+    const icon = req.files.icon;
+    const model = req.files.model;
+    icon.mv(path.join(__dirname + '/../uploads/images/' + icon.name), function(err, result) {
+        if(err)
+            throw err;
+        model.mv(path.join(__dirname + '/../uploads/models/' + model.name), function(err, result) {
+            if(err)
+                throw err;
+            res.status(201).send({
+                success: true,
+                message: "File uploaded!"
+            });
+        })
+    })
+
+}
+
+const addModel = (req, res, next) => {
+    const {name, creator = 'Admin', creation_date = new Date(), status = 'U', mpath = path.join(__dirname + '/../uploads/models/' + name), imgname} = req.body;
+    const ipath = path.join(__dirname + '/../uploads/models/' + imgname);
+
+    pool.query(queries.addImage, [ipath], (error, results) => {
+            if (error) throw error;
+            console.log("Image added successfully.");
+            const image = results.rows[0].id;
+            pool.query(queries.addModel, [name, creator, creation_date, status, mpath, image], (error, results) => {
+                if (error) throw error;
+                res.status(201).send("Model added successfully.");
+                console.log("Model added successfully.");
+            }
+        );
+        }
+    );
+
+}
+
+const getModelById = (req, res) => {
+    const id = parseInt(req.params.id);
+    pool.query(queries.getModelById, [id], (error, results) => {
+        if(error) throw error;
+        res.status(200).json(results.rows);
+    })
+};
 
 module.exports = {
     getUsers,
@@ -90,5 +134,8 @@ module.exports = {
     addUser,
     deleteUserById,
     addModel,
-    updateUserById
+    updateUserById,
+    getModelById,
+    getModels,
+    uploadModel
 };

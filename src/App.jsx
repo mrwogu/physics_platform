@@ -1,4 +1,5 @@
-import React  from 'react';
+import React, {Component}  from 'react';
+import "bootstrap/dist/css/bootstrap.min.css";
 import Home from './pages/Home';
 import Models from './pages/Models';
 import Account from './pages/Account';
@@ -23,5 +24,6 @@ function App() {
 
   );
 }
+
 
 export default App;

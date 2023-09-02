@@ -6,7 +6,11 @@ const addUser = "INSERT INTO users (firstname, surname, email, login, role) VALU
 const deleteUserById = "DELETE FROM users where id = $1";
 const updateUserById = "UPDATE users SET name = $1 WHERE id = $2";
 
-const addModel = "INSERT INTO users (model_name, creator, creation_date, status, model_code) VALUES ($1, $2, $3, $4, $5)";
+const addModel = "INSERT INTO models (name, creator, creation_date, status, path, image) VALUES ($1, $2, $3, $4, $5, $6)";
+const getModelById = "SELECT * FROM models WHERE id=$1";
+const getModels = "SELECT * FROM models";
+
+const addImage = "INSERT INTO images (path) VALUES ($1) RETURNING id";
 
 module.exports = {
     getUsers,
@@ -16,5 +20,8 @@ module.exports = {
     checkEmailExists,
     deleteUserById,
     addModel,
-    updateUserById
+    updateUserById,
+    getModelById,
+    getModels,
+    addImage
 }

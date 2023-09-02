@@ -9,9 +9,10 @@ router.get('/users/:id', controller.getUserById);
 router.delete('/users/:id', controller.deleteUserById);
 router.put('/users/:id', controller.updateUserById);
 
-//router.get('/models/', controller.getModels);
+router.get('/models/', controller.getModels);
 router.post('/models',controller.addModel );
-//router.get('/models/:id', controller.getModelById);
+router.get('/models/:id', controller.getModelById);
+router.post('/uploadModel/', controller.uploadModel);
 //router.delete('/models/:id', controller.deleteModelById);
 //router.put('/models/:id', controller.updateModelById);
 

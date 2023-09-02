@@ -2,20 +2,20 @@ const express = require('express'),
     cors = require('cors'),
     bodyParser = require('body-parser'),
     swaggerJsdoc = require('swagger-jsdoc'),
-    swaggerUi = require('swagger-ui-express');
+    swaggerUi = require('swagger-ui-express'),
+    fileupload = require('express-fileupload');
 
 const physicsRoutes = require('./src/restapi/routes')
 
 const app = express();
 const port = 8000;
 
-app.use(cors);
+app.use(cors());
+app.use(fileupload())
 app.use(express.json());
 app.get("/", (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     res.send("Hello world!");
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 });
 
 app.use('/api', physicsRoutes);

@@ -2,69 +2,76 @@ import React, {useId, useState} from 'react';
 import "../styles/AddModel.css";
 
 function AddModel(setErrorMessage) {
+    const [image, setImage] = useState()
+    const [model, setModel] = useState()
+    const [name, setName] = useState()
+    const [imgname, setImgName] = useState()
 
-    const [modelName, setModelName] = useState("");
-    const [creator, setCreator] = useState("");
-    const [creationDate, setCreationDate] = useState("");
-    const [status, setStatus] = useState("");
-    const [modelCode, setModelCode] = useState("");
+    function handleImage(event) {
+        setImage(event.target.files[0])
+        console.log(event.target.files[0])
+    }
 
-    const handleCreateModel= async (e) => {
+    function handleModel(event) {
+        setModel(event.target.files[0])
+        setImgName(event.target.files[0].name)
+        console.log(event.target.files[0])
+    }
+
+    function handleUpload(e){
+        handleModelUpload(e);
+        handleImageUpload(e);
+    }
+    const handleModelUpload= async (e) => {
         e.preventDefault();
-        setStatus("A");
-        setCreationDate(Date());
-        setCreator("Test");
         const requestOptions = {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({model_name: modelName, creator: creator, creation_date: creationDate, status: status, model_code: modelCode})
+            body: JSON.stringify({name: name, imgname: imgname})
         };
-        const response = await fetch("http://localhost:8000/models", requestOptions);
+        const response = await fetch("http://localhost:8000/api/models", requestOptions);
         if(!response) {
-            setErrorMessage("Model cannot be created")
+            setErrorMessage("Model cannot be uploaded")
+        } else {
+        }
+    };
+    const handleImageUpload= async (e) => {
+        e.preventDefault();
+        const formData = new FormData;
+        formData.append('icon', image)
+        formData.append('model', model)
+        const requestOptions = {
+            method: "POST",
+            body: formData
+        };
+        const response = await fetch("http://localhost:8000/api/uploadModel", requestOptions);
+        if(!response) {
+            setErrorMessage("Model cannot be uploaded")
+        } else {
         }
     };
 
-    const newModelAreaId = useId();
     return (
-        <div className='addmodel'>
-            <form method="post" onSubmit={handleCreateModel}>
-                <h1>Add a new model here</h1>
-                <div className="item">
-                <label>
-                    Post title:
-                </label>
+        <div>
+            <h2>Upload your JS model</h2>
+            <form onSubmit={handleUpload}>
+                <div className='field'>
+                    <label className='label'>Name</label>
+                    <input type="text" name="name" onChange={(e) => setName(e.target.value)}/>
                 </div>
-                <div className="item">
-                    <input
-                        type="text"
-                        name="modelName"
-                        defaultValue="Simple collision"
-                        value={modelName}
-                        onChange={(e)=>setModelName(e.target.value)}
-                        required
-                    />
+                <div className='field'>
+                    <label className='label'>Small image</label>
+                    <input type="file" name="image" onChange={handleImage}/>
                 </div>
-                <div className="item">
-                    <label htmlFor={newModelAreaId}>
-                        Add your code:
-                    </label>
+                <div className='field'>
+                    <label className='label'>Source code file</label>
+                    <input type="file" name="model" onChange={handleModel}/>
                 </div>
-                <div className="item">
-                    <textarea
-                        id={newModelAreaId}
-                        name="newModel"
-                        value={modelCode}
-                        onChange={(e)=>setModelCode(e.target.value)}
-                        required
-                        rows={4}
-                        cols={40}/>
-                </div>
-                <button class="button-3" type='reset'>Reset edits</button>
-                <button class="button-3" type='submit' onClick={handleCreateModel}>Save post</button>
+                <button type='submit'>Upload</button>
             </form>
         </div>
-    );
+    )
 }
+
 
 export default AddModel;

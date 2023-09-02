@@ -1,13 +1,12 @@
-import React from 'react';
-import Model01 from "../experiments/Model01";
+import React, {useState, useEffect} from 'react';
 
-function Models() {
-    return (
-        <div className='models'>
-            <h1>Models</h1>
-            <div>Model01</div>
+const Models = () => {
+
+        return(
+        <div className="App">
         </div>
-    );
-}
+    )
+
+};
 
 export default Models;
