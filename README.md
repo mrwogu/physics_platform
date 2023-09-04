@@ -1,3 +1,29 @@
+# How to start?
+
+1.: Use node 16+ with npm 9+ and run:
+
+    npm ci
+
+2.: Turn on database (database structure will be installed automatically from `install/db-schema.sql`:
+
+    docker compose up -d
+
+3.: Turn on API Server
+
+    npm run server
+
+4.: Turn on React APP
+
+    npm start
+
+5.: Open http://localhost:3000 in your browser.
+
+6.: To reach pgAdmin open http://localhost:5050
+with credentials:
+
+    admin@admin.com
+    password
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

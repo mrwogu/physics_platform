@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "physics_platform",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "Username": "postgres",
+      "MaintenanceDB": "postgres",
+      "PassFile": "/pgpass"
+    }
+  }
+}
